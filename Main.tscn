@@ -1,17 +1,69 @@
-[gd_scene load_steps=3 format=3 uid="uid://dahq381e5sjit"]
+[gd_scene load_steps=8 format=3 uid="uid://dahq381e5sjit"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_csh36"]
+[ext_resource type="Texture2D" uid="uid://fjs4dxfwa5qo" path="res://Player.png" id="2_e88tk"]
+[ext_resource type="Texture2D" uid="uid://u3wtwpcor1ko" path="res://target.png" id="3_amsn1"]
+[ext_resource type="Theme" uid="uid://ddmjvxo2g5xds" path="res://UITheme.tres" id="4_033ra"]
+[ext_resource type="Script" path="res://VelocityDisplay.cs" id="5_3hdjb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_588vi"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0r6g6"]
 
 [node name="Node3D" type="Node3D"]
 
 [node name="Player" type="CharacterBody3D" parent="."]
 script = ExtResource("1_csh36")
+acceleration = 0.01
+turnSpeed = 1.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 shape = SubResource("BoxShape3D_588vi")
 
 [node name="Camera3D" type="Camera3D" parent="Player"]
+transform = Transform3D(-1, 1.51808e-08, -8.60946e-08, 0, 0.984808, 0.173648, 8.74228e-08, 0.173648, -0.984808, 0, 0.33, -1)
 
 [node name="Sprite3D" type="Sprite3D" parent="Player"]
+billboard = 2
+shaded = true
+double_sided = false
+alpha_scissor_threshold = 0.0
+texture_filter = 0
+texture = ExtResource("2_e88tk")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+gravity_scale = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
+shape = SubResource("SphereShape3D_0r6g6")
+
+[node name="Sprite3D" type="Sprite3D" parent="RigidBody3D"]
+billboard = 2
+double_sided = false
+texture_filter = 0
+texture = ExtResource("3_amsn1")
+
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 40.0
+grow_vertical = 0
+theme = ExtResource("4_033ra")
+
+[node name="Velocity" type="Label" parent="UI" node_paths=PackedStringArray("player")]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -26.0
+offset_right = 79.0
+grow_vertical = 0
+text = "Velocity: 0"
+script = ExtResource("5_3hdjb")
+player = NodePath("../../Player")
