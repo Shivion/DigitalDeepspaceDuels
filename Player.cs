@@ -12,7 +12,7 @@ public partial class Player : CharacterBody3D
 
 	private const float c = 299792458;
 
-	public override void _PhysicsProcess(double delta)
+    public override void _PhysicsProcess(double delta)
 	{
 		if (Input.IsActionPressed("forward"))
 		{
@@ -31,7 +31,16 @@ public partial class Player : CharacterBody3D
             RotationDegrees -= new Vector3(0, 1, 0) * turnSpeed;
 		}
 
-		Position += velocity;
+        if (Input.IsActionPressed("fire_primary"))
+        {
+            var spaceState = GetWorld3D().DirectSpaceState;
+            //if you don't hit in a light second, you probably missed
+            PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(Position, Basis.Z.Normalized() * c);
+            Godot.Collections.Dictionary result = spaceState.IntersectRay(query);
+			Target.ResetTarget(result);
+        }
+
+        Position += velocity;
 	}
 
 	//This might as well say return 1 without some changes. But I'll forget it if I move it

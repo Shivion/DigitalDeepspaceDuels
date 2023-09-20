@@ -1,10 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://dahq381e5sjit"]
+[gd_scene load_steps=16 format=3 uid="uid://dahq381e5sjit"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_csh36"]
 [ext_resource type="Texture2D" uid="uid://fjs4dxfwa5qo" path="res://Player.png" id="2_e88tk"]
+[ext_resource type="Texture2D" uid="uid://dxk5wm02uxgmt" path="res://TargetArrowFront.png" id="3_4hhbt"]
 [ext_resource type="Texture2D" uid="uid://u3wtwpcor1ko" path="res://target.png" id="3_amsn1"]
+[ext_resource type="Script" path="res://VelocityArrow.cs" id="3_fwbfl"]
+[ext_resource type="Script" path="res://Target.cs" id="3_gfm8r"]
+[ext_resource type="Texture2D" uid="uid://dwhq3cbvb2cvg" path="res://VelocityArrowFront.png" id="3_q4w35"]
 [ext_resource type="Theme" uid="uid://ddmjvxo2g5xds" path="res://UITheme.tres" id="4_033ra"]
+[ext_resource type="Texture2D" uid="uid://bkxi2j53mnrby" path="res://VelocityArrowBack.png" id="4_jgl65"]
+[ext_resource type="Texture2D" uid="uid://dg7lladuh7875" path="res://TargetArrowBack.png" id="4_pahgi"]
 [ext_resource type="Script" path="res://VelocityDisplay.cs" id="5_3hdjb"]
+[ext_resource type="Script" path="res://TargetArrow.cs" id="6_g03lw"]
+[ext_resource type="Script" path="res://Score.cs" id="7_xlmkb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_588vi"]
 
@@ -26,21 +34,58 @@ transform = Transform3D(-1, 1.51808e-08, -8.60946e-08, 0, 0.984808, 0.173648, 8.
 
 [node name="Sprite3D" type="Sprite3D" parent="Player"]
 billboard = 2
-shaded = true
 double_sided = false
 alpha_scissor_threshold = 0.0
 texture_filter = 0
 texture = ExtResource("2_e88tk")
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="Velocity Arrow" type="Node3D" parent="Player" node_paths=PackedStringArray("player")]
+script = ExtResource("3_fwbfl")
+player = NodePath("..")
+
+[node name="Front" type="Sprite3D" parent="Player/Velocity Arrow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
+pixel_size = 0.0015
+axis = 1
+texture_filter = 0
+texture = ExtResource("3_q4w35")
+
+[node name="Back" type="Sprite3D" parent="Player/Velocity Arrow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
+pixel_size = 0.0015
+axis = 1
+texture_filter = 0
+texture = ExtResource("4_jgl65")
+
+[node name="Target Arrow" type="Node3D" parent="Player" node_paths=PackedStringArray("target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.000499755, 0)
+script = ExtResource("6_g03lw")
+target = NodePath("../../Target")
+
+[node name="Front" type="Sprite3D" parent="Player/Target Arrow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25)
+pixel_size = 0.002
+axis = 1
+texture_filter = 0
+texture = ExtResource("3_4hhbt")
+
+[node name="Back" type="Sprite3D" parent="Player/Target Arrow"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
+pixel_size = 0.002
+axis = 1
+texture_filter = 0
+texture = ExtResource("4_pahgi")
+
+[node name="Target" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 gravity_scale = 0.0
+script = ExtResource("3_gfm8r")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Target"]
 transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 0)
 shape = SubResource("SphereShape3D_0r6g6")
 
-[node name="Sprite3D" type="Sprite3D" parent="RigidBody3D"]
+[node name="Sprite3D" type="Sprite3D" parent="Target"]
 billboard = 2
 double_sided = false
 texture_filter = 0
@@ -67,3 +112,11 @@ grow_vertical = 0
 text = "Velocity: 0"
 script = ExtResource("5_3hdjb")
 player = NodePath("../../Player")
+
+[node name="Score" type="Label" parent="UI"]
+layout_mode = 0
+offset_top = -10.0
+offset_right = 79.0
+offset_bottom = 18.0
+text = "Score: 0"
+script = ExtResource("7_xlmkb")
